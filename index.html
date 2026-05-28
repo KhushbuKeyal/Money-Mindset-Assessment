@@ -1059,8 +1059,15 @@ function generateReport(){
     // Scenario H — clear label but inconsistent behaviour
     syncClass = 'gap';
     syncLabel = 'A Gap Detected';
-    stxt = 'You have a clear sense of what you want from money — but your day to day financial decisions don\'t reflect that yet. And if this continues, reaching your financial goals will take much longer than it should.';
-    sbox = 'The next step is turning what you believe into a plan — one that makes sure your actions start matching your goals.';
+    if(sc.label === 'scarcity'){
+      // H1 — Survivor + inconsistent
+      stxt = 'Your relationship with money is driven more by worry than by purpose. This is also showing up in your day to day financial decisions. And if this continues, reaching your financial goals may become difficult.';
+      sbox = 'The first step is building a clear roadmap — one that brings clarity and takes you from fear to confidence.';
+    } else {
+      // H2 — Planner, Achiever, Free Spirit, Visionary + inconsistent
+      stxt = 'You have a clear sense of what you want from money — but your day to day financial decisions don\'t reflect that yet. And if this continues, reaching your financial goals will take much longer than it should.';
+      sbox = 'The next step is turning what you believe into a plan — one that makes sure your actions start matching your goals.';
+    }
 
   } else if(sc.label === sc.primary){
     // Scenario A — in sync
