@@ -915,9 +915,31 @@ function calcSc(){
   var q4m = answers[3]!==null ? QS[3].opts[answers[3]].m : null;
   var label = null;
   var seeker = false;
+
+  var limitedGroup = ['scarcity','security'];
+  var growthGroup = ['status','freedom','abundance'];
+
   if(q1m && q4m){
-    if(q1m === q4m){ label = q1m; }
-    else { seeker = true; }
+    if(q1m === q4m){
+      // Exact match — clear label
+      label = q1m;
+    } else {
+      var q1limited = limitedGroup.indexOf(q1m) > -1;
+      var q4limited = limitedGroup.indexOf(q4m) > -1;
+      var q1growth = growthGroup.indexOf(q1m) > -1;
+      var q4growth = growthGroup.indexOf(q4m) > -1;
+
+      if(q1limited && q4limited){
+        // Both limited group — use Q1
+        label = q1m;
+      } else if(q1growth && q4growth){
+        // Both growth group — use Q1
+        label = q1m;
+      } else {
+        // One from each group — genuine conflict = Seeker
+        seeker = true;
+      }
+    }
   } else if(q1m){ label = q1m; }
   else if(q4m){ label = q4m; }
 
