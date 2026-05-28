@@ -5,13 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Know Your Money Mindset — by Khushbu Keyal</title>
 <meta property="og:title" content="Know Your Money Mindset — by Khushbu Keyal">
-<meta property="og:description" content="10 honest questions to reveal what you truly believe about money — and whether your financial decisions are in sync.">
+<meta property="og:description" content="Know what you truly believe about money and whether your financial decisions are in sync. 10 questions. Under 5 minutes. Free report.">
 <meta property="og:image" content="https://khushbukeyal.github.io/Money-Mindset-Assessment/og-image.png">
 <meta property="og:url" content="https://khushbukeyal.github.io/Money-Mindset-Assessment/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Know Your Money Mindset — by Khushbu Keyal">
-<meta name="twitter:description" content="10 honest questions to reveal what you truly believe about money.">
+<meta name="twitter:description" content="Know what you truly believe about money and whether your financial decisions are in sync. 10 questions. Under 5 minutes. Free report.">
 <meta name="twitter:image" content="https://khushbukeyal.github.io/Money-Mindset-Assessment/og-image.png">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600;700&family=Lora:wght@400;700&display=swap" rel="stylesheet">
 <style>
@@ -535,7 +535,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--green-dark); color:
   <div class="landing-inner">
     <div class="eyebrow">Financial Psychology Assessment</div>
     <h1 class="landing-title">Know Your<br><em>Money Mindset</em></h1>
-    <p class="landing-desc">10 honest questions to reveal what you truly believe about money — and whether your financial decisions are in sync.</p>
+    <p class="landing-desc">Know what you truly believe about money and whether your financial decisions are in sync. 10 questions. Under 5 minutes. Free report.</p>
     <div class="landing-meta">
       <div class="meta-item"><div class="meta-dot"></div>10 Questions</div>
       <div class="meta-item"><div class="meta-dot"></div>Under 5 Minutes</div>
@@ -1153,6 +1153,29 @@ function generateReport(){
   var waMsg = 'Hi Khushbu, I just completed the Money Mindset Assessment. My mindset is '+mindsetName+' and my top goals are: '+goalsText+'. Please send me my full report.';
   var waBtn = document.getElementById('wa-report-btn');
   if(waBtn) waBtn.href = 'https://wa.me/9779849849876?text='+encodeURIComponent(waMsg);
+
+  // Save to Google Sheets
+  var SHEET_URL = 'https://script.google.com/macros/s/AKfycbyS2jVgqTSuAQCRFKItNYc95GkYAnkYccVs5DPOnKoF0JtKtlMwN9pMnkPXBw4kzFayxw/exec';
+  var sheetData = {
+    name: user.name,
+    occupation: user.occupation || '',
+    experience: user.exp,
+    location: user.location,
+    email: user.email || '',
+    phone: user.phone || '',
+    mindsetLabel: sc.seeker ? 'The Seeker' : (MD[sc.label] ? MD[sc.label].label : sc.label),
+    primaryBehaviour: MD[sc.primary] ? MD[sc.primary].label : sc.primary,
+    secondaryBehaviour: sc.secondary && MD[sc.secondary] ? MD[sc.secondary].label : '',
+    goal1: gl[0] || '',
+    goal2: gl[1] || '',
+    goal3: gl[2] || ''
+  };
+  fetch(SHEET_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(sheetData)
+  }).catch(function(err){ console.log('Sheet save error:', err); });
 
   // Set photo
   var aphoto = document.getElementById('aphoto');
