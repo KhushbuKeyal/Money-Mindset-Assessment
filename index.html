@@ -1183,23 +1183,29 @@ function generateReport(){
   var waBtn = document.getElementById('wa-report-btn');
   if(waBtn) waBtn.href = 'https://wa.me/9779849849876?text='+encodeURIComponent(waMsg);
 
-  // Save to Google Sheets via GET request
+  // Save to Google Sheets and generate PDF in Drive
   var SHEET_URL = 'https://script.google.com/macros/s/AKfycbyS2jVgqTSuAQCRFKItNYc95GkYAnkYccVs5DPOnKoF0JtKtlMwN9pMnkPXBw4kzFayxw/exec';
-  var mindsetLabel = sc.seeker ? 'The Seeker' : (MD[sc.label] ? MD[sc.label].label : sc.label);
-  var primaryBeh = MD[sc.primary] ? MD[sc.primary].label : sc.primary;
-  var secondaryBeh = sc.secondary && MD[sc.secondary] ? MD[sc.secondary].label : '';
+  var mindsetLabelStr = sc.seeker ? 'The Seeker' : (MD[sc.label] ? MD[sc.label].label : sc.label);
+  var primaryBehStr = MD[sc.primary] ? MD[sc.primary].label : sc.primary;
+  var secondaryBehStr = sc.secondary && MD[sc.secondary] ? MD[sc.secondary].label : '';
   var params = '?name='+encodeURIComponent(user.name)
     +'&occupation='+encodeURIComponent(user.occupation||'')
     +'&experience='+encodeURIComponent(user.exp)
     +'&location='+encodeURIComponent(user.location)
     +'&email='+encodeURIComponent(user.email||'')
     +'&phone='+encodeURIComponent(user.phone||'')
-    +'&mindsetLabel='+encodeURIComponent(mindsetLabel)
-    +'&primaryBehaviour='+encodeURIComponent(primaryBeh)
-    +'&secondaryBehaviour='+encodeURIComponent(secondaryBeh)
+    +'&mindsetLabel='+encodeURIComponent(mindsetLabelStr)
+    +'&primaryBehaviour='+encodeURIComponent(primaryBehStr)
+    +'&secondaryBehaviour='+encodeURIComponent(secondaryBehStr)
     +'&goal1='+encodeURIComponent(gl[0]||'')
     +'&goal2='+encodeURIComponent(gl[1]||'')
-    +'&goal3='+encodeURIComponent(gl[2]||'');
+    +'&goal3='+encodeURIComponent(gl[2]||'')
+    +'&mindsetDesc='+encodeURIComponent(sc.seeker ? document.querySelector('.section-body-light') ? document.querySelector('.section-body-light').innerText : '' : (md ? md.desc : ''))
+    +'&mindsetBlockquote='+encodeURIComponent(sc.seeker ? '' : (md ? md.descBox : ''))
+    +'&decisions='+encodeURIComponent(behMd ? behMd.decisions : '')
+    +'&decisionsSecondary='+encodeURIComponent(sc.secondary && MD[sc.secondary] ? 'But sometimes your decisions also reflect '+MD[sc.secondary].secLine+'.' : '')
+    +'&thoughtsText='+encodeURIComponent(stxt)
+    +'&thoughtsBox='+encodeURIComponent(sbox);
   var img = new Image();
   img.src = SHEET_URL + params;
 
