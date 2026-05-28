@@ -1154,28 +1154,25 @@ function generateReport(){
   var waBtn = document.getElementById('wa-report-btn');
   if(waBtn) waBtn.href = 'https://wa.me/9779849849876?text='+encodeURIComponent(waMsg);
 
-  // Save to Google Sheets
+  // Save to Google Sheets via GET request
   var SHEET_URL = 'https://script.google.com/macros/s/AKfycbyS2jVgqTSuAQCRFKItNYc95GkYAnkYccVs5DPOnKoF0JtKtlMwN9pMnkPXBw4kzFayxw/exec';
-  var sheetData = {
-    name: user.name,
-    occupation: user.occupation || '',
-    experience: user.exp,
-    location: user.location,
-    email: user.email || '',
-    phone: user.phone || '',
-    mindsetLabel: sc.seeker ? 'The Seeker' : (MD[sc.label] ? MD[sc.label].label : sc.label),
-    primaryBehaviour: MD[sc.primary] ? MD[sc.primary].label : sc.primary,
-    secondaryBehaviour: sc.secondary && MD[sc.secondary] ? MD[sc.secondary].label : '',
-    goal1: gl[0] || '',
-    goal2: gl[1] || '',
-    goal3: gl[2] || ''
-  };
-  fetch(SHEET_URL, {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify(sheetData)
-  }).catch(function(err){ console.log('Sheet save error:', err); });
+  var mindsetLabel = sc.seeker ? 'The Seeker' : (MD[sc.label] ? MD[sc.label].label : sc.label);
+  var primaryBeh = MD[sc.primary] ? MD[sc.primary].label : sc.primary;
+  var secondaryBeh = sc.secondary && MD[sc.secondary] ? MD[sc.secondary].label : '';
+  var params = '?name='+encodeURIComponent(user.name)
+    +'&occupation='+encodeURIComponent(user.occupation||'')
+    +'&experience='+encodeURIComponent(user.exp)
+    +'&location='+encodeURIComponent(user.location)
+    +'&email='+encodeURIComponent(user.email||'')
+    +'&phone='+encodeURIComponent(user.phone||'')
+    +'&mindsetLabel='+encodeURIComponent(mindsetLabel)
+    +'&primaryBehaviour='+encodeURIComponent(primaryBeh)
+    +'&secondaryBehaviour='+encodeURIComponent(secondaryBeh)
+    +'&goal1='+encodeURIComponent(gl[0]||'')
+    +'&goal2='+encodeURIComponent(gl[1]||'')
+    +'&goal3='+encodeURIComponent(gl[2]||'');
+  var img = new Image();
+  img.src = SHEET_URL + params;
 
   // Set photo
   var aphoto = document.getElementById('aphoto');
