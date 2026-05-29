@@ -527,6 +527,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--green-dark); color:
   .report-section-hero::before { background: linear-gradient(90deg, #FFD700, transparent) !important; }
 }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
 
@@ -1197,17 +1198,33 @@ function generateReport(){
     +'&mindsetLabel='+encodeURIComponent(mindsetLabelStr)
     +'&primaryBehaviour='+encodeURIComponent(primaryBehStr)
     +'&secondaryBehaviour='+encodeURIComponent(secondaryBehStr)
+    +'&thoughtsScenario='+encodeURIComponent(stxt.substring(0,100))
     +'&goal1='+encodeURIComponent(gl[0]||'')
     +'&goal2='+encodeURIComponent(gl[1]||'')
-    +'&goal3='+encodeURIComponent(gl[2]||'')
-    +'&mindsetDesc='+encodeURIComponent(sc.seeker ? document.querySelector('.section-body-light') ? document.querySelector('.section-body-light').innerText : '' : (md ? md.desc : ''))
-    +'&mindsetBlockquote='+encodeURIComponent(sc.seeker ? '' : (md ? md.descBox : ''))
-    +'&decisions='+encodeURIComponent(behMd ? behMd.decisions : '')
-    +'&decisionsSecondary='+encodeURIComponent(sc.secondary && MD[sc.secondary] ? 'But sometimes your decisions also reflect '+MD[sc.secondary].secLine+'.' : '')
-    +'&thoughtsText='+encodeURIComponent(stxt)
-    +'&thoughtsBox='+encodeURIComponent(sbox);
+    +'&goal3='+encodeURIComponent(gl[2]||'');
   var img = new Image();
   img.src = SHEET_URL + params;
+
+  // Silent PDF generation and save to Google Drive
+  setTimeout(function(){
+    var reportEl = document.getElementById('results');
+    if(!reportEl) return;
+    var pdfName = user.name.replace(/\s+/g,'_') + '_MoneyMindset_' + 
+                  new Date().toLocaleDateString('en-GB').replace(/\//g,'') + '.pdf';
+    var opt = {
+      margin: 0,
+      filename: pdfName,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2, useCORS: true, scrollY: 0 },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+    html2pdf().set(opt).from(reportEl).outputPdf('datauristring').then(function(pdfData){
+      // Send base64 PDF to Apps Script to save in Google Drive
+      var base64 = pdfData.split(',')[1];
+      fetch(SHEET_URL + '?action=savePdf&filename=' + encodeURIComponent(pdfName) + '&pdf=' + encodeURIComponent(base64))
+        .catch(function(){});
+    });
+  }, 2000);
 
   // Set photo
   var aphoto = document.getElementById('aphoto');
