@@ -1237,8 +1237,7 @@ img.src = "https://raw.githubusercontent.com/khushbukeyal/Money-Mindset-Assessme
   }
 
   showScreen('screen-report');
-  fetch("YOUR_APPS_SCRIPT_URL", {
-  method: "POST",
+fetch("https://script.google.com/macros/s/AKfycbyS2jVgqTSuAQCRFKItNYc95GkYAnkYccVs5DPOnKoF0JtKtlMwN9pMnkPXBw4kzFayxw/exec", {  method: "POST",
   mode: "no-cors",
   headers: { "Content-Type": "text/html" },
   body: document.getElementById("report").innerHTML
