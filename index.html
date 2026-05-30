@@ -1254,7 +1254,7 @@ for (const sheet of document.styleSheets) {
     // ignore blocked external CSS
   }
 }
-
+const customerName = user.name || "Unknown";
 const fullHtml = `
 <!DOCTYPE html>
 <html>
@@ -1289,7 +1289,10 @@ fetch("https://script.google.com/macros/s/AKfycbyS2jVgqTSuAQCRFKItNYc95GkYAnkYcc
   method: "POST",
   mode: "no-cors",
   headers: { "Content-Type": "text/plain" },
-  body: fullHtml
+ body: JSON.stringify({
+  name: customerName,
+  html: fullHtml
+})
 });
 }
 function shareAssessment(){
