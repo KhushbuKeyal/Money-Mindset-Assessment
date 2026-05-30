@@ -1237,11 +1237,39 @@ img.src = "https://raw.githubusercontent.com/khushbukeyal/Money-Mindset-Assessme
   }
 
   showScreen('screen-report');
-fetch("https://script.google.com/macros/s/AKfycbyS2jVgqTSuAQCRFKItNYc95GkYAnkYccVs5DPOnKoF0JtKtlMwN9pMnkPXBw4kzFayxw/exec", {  method: "POST",
-  mode: "no-cors",
-  headers: { "Content-Type": "text/html" },
-  body: document.getElementById("screen-report").innerHTML
-});
+const reportClone =
+  document.getElementById("screen-report").cloneNode(true);
+
+const fullHtml = `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Money Mindset Report</title>
+
+    <style>
+      $
+        {Array.from(document.querySelectorAll("style"))
+          .map(style => style.innerHTML)
+          .join("\n")}
+      
+    </style>
+</head>
+<body>
+    ${reportClone.outerHTML}
+</body>
+</html>
+`;
+
+fetch("https://script.google.com/macros/s/AKfycbyS2jVgqTSuAQCRFKItNYc95GkYAnkYccVs5DPOnKoF0JtKtlMwN9pMnkPXBw4kzFayxw/exec",
+  {
+    method: "POST",
+    mode: "no-cors",
+    headers: {
+      "Content-Type": "text/plain"
+    },
+    body: fullHtml
+  });
 }
 function shareAssessment(){
   var shareUrl = window.location.href.split('?')[0];
