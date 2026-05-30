@@ -1237,39 +1237,60 @@ img.src = "https://raw.githubusercontent.com/khushbukeyal/Money-Mindset-Assessme
   }
 
   showScreen('screen-report');
-const reportClone =
-  document.getElementById("screen-report").cloneNode(true);
+const reportClone = document.getElementById("screen-report").cloneNode(true);
+
+reportClone.className = "";
+reportClone.removeAttribute("id");
+
+// Collect CSS more strongly
+let allCss = "";
+
+for (const sheet of document.styleSheets) {
+  try {
+    for (const rule of sheet.cssRules) {
+      allCss += rule.cssText + "\n";
+    }
+  } catch (e) {
+    // ignore blocked external CSS
+  }
+}
 
 const fullHtml = `
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>Money Mindset Report</title>
+  <meta charset="UTF-8">
+  <title>Money Mindset Report</title>
+  <base href="https://khushbukeyal.github.io/Money-Mindset-Assessment/">
 
-    <style>
-      $
-        {Array.from(document.querySelectorAll("style"))
-          .map(style => style.innerHTML)
-          .join("\n")}
-      
-    </style>
+  <style>
+    ${allCss}
+
+    body {
+      background: #f5efe6;
+      margin: 0;
+      padding: 40px 20px;
+    }
+
+    body > div {
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+  </style>
 </head>
 <body>
-    ${reportClone.outerHTML}
+  ${reportClone.outerHTML}
 </body>
 </html>
 `;
 
-fetch("https://script.google.com/macros/s/AKfycbyS2jVgqTSuAQCRFKItNYc95GkYAnkYccVs5DPOnKoF0JtKtlMwN9pMnkPXBw4kzFayxw/exec",
-  {
-    method: "POST",
-    mode: "no-cors",
-    headers: {
-      "Content-Type": "text/plain"
-    },
-    body: fullHtml
-  });
+fetch("https://script.google.com/macros/s/AKfycbyS2jVgqTSuAQCRFKItNYc95GkYAnkYccVs5DPOnKoF0JtKtlMwN9pMnkPXBw4kzFayxw/exec", {
+  method: "POST",
+  mode: "no-cors",
+  headers: { "Content-Type": "text/plain" },
+  body: fullHtml
+});
 }
 function shareAssessment(){
   var shareUrl = window.location.href.split('?')[0];
